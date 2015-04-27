@@ -29,7 +29,7 @@ public class Map : MonoBehaviour {
 
 		GridLines.S.createGrid (mapSize);
 		Walls.S.buildWalls ();
-		RoutingPath.S.setupEnv ();
-		//TileDrop.S.setupEnviroment (mapSize);
+		//RoutingPath.S.setupEnv ();
+		TileDrop.S.setupEnviroment (mapSize);
 	}
 }

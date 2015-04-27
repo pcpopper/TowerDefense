@@ -37,8 +37,8 @@ public class TileDrop : MonoBehaviour {
 	public void setupEnviroment (Vector2 mapSize) {
 		xAxis = new int[(int)mapSize.y];
 		yAxis = new int[(int)mapSize.x];
-		xSize = (int)mapSize.x - 6;
-		ySize = (int)mapSize.y - 6;
+		xSize = (int)mapSize.x - 1;
+		ySize = (int)mapSize.y - 1;
 		objectsList = new GameObject[(int) mapSize.y, (int) mapSize.x];
 
 		GameObject parent = GameObject.Find ("Walls");
