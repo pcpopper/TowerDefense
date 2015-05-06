@@ -16,12 +16,14 @@ public class Enemy_Spawn : MonoBehaviour {
 
 	public Enemies[] enemies;
 	public bool spawnEnemy = false;
+	public Vector3[] routePath;
 
 	//[HideInInspector]
 	public Vector3 destination;
 
 	void Awake () {
 		S = this;
+		destination = routePath [routePath.Length - 1];
 	}
 
 	void Update () {
@@ -39,12 +41,8 @@ public class Enemy_Spawn : MonoBehaviour {
 
 		enemies [0].spawnedCount++;
 
-		destination = new Vector3 (Walls.S.rightDoor.x, 1, Walls.S.rightDoor.z);
-		Vector3 startPos = new Vector3 (-1, 1, Walls.S.leftDoor.z);
-
+		Vector3 startPos = new Vector3 (-1, 0, 7);
 		GameObject enemy = Instantiate (enemies [0].enemyPrefab, startPos, Quaternion.identity) as GameObject;
-		Enemy script = enemy.GetComponent<Enemy> ();
 		enemy.transform.parent = transform;
-		script.on = true;
 	}
 }

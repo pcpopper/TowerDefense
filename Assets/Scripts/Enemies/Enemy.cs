@@ -5,33 +5,28 @@ public class Enemy : EnemySuperClass {
 
 	public static Enemy S;
 
-	[HideInInspector]
-	public bool on = false;
-	public int count = 0;
-	public int wait = 1000;
-
+	private Enemy_Spawn enemySpwan;
 	private Vector3 newDestination;
+	private Vector3[] routePath;
+	private int nextPointIndex;
 
 	void Awake () {
 		S = this;
-		newDestination = Vector3.zero;
+		nextPointIndex = 1;
+		enemySpwan = Enemy_Spawn.S;
+		routePath = enemySpwan.routePath;
 	}
 
 	void Update () {
-		if (on && count%wait == 0) {
-			if (transform.position == Enemy_Spawn.S.destination) {
-				Destroy (gameObject);
+		if (transform.position.x == routePath [nextPointIndex].x && transform.position.z == routePath [nextPointIndex].z) {
+			if (transform.position == enemySpwan.destination) {
+				Destroy(gameObject);
 			} else {
-				float step = options.speed * Time.deltaTime;
-				newDestination = (newDestination != Vector3.zero) ? newDestination : Enemy_Spawn.S.destination;
-				transform.position = Vector3.MoveTowards (transform.position, newDestination, step);
-
-				RaycastHit hit;
-				if (directionBlocked(transform.position, Enemy_Spawn.S.destination, out hit)) {
-					newDestination = findOpening(hit.point);
-				} else {}
+				nextPointIndex++;
 			}
 		}
-		count++;
+
+		float step = options.speed * Time.deltaTime;
+		transform.position = Vector3.MoveTowards (transform.position, routePath [nextPointIndex], step);
 	}
 }

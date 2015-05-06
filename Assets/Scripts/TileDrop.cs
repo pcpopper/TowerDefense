@@ -8,13 +8,8 @@ public class TileDrop : MonoBehaviour {
 
 	public GameObject highlitePrefab;
 	public bool HighlightAtPointer;
-	public GameObject[,] objectsList;
 
 	private GameObject highlitedSquare;
-	public int xSize;
-	public int ySize;
-	public int[] xAxis;
-	public int[] yAxis;
 
 	void Awake () {
 		S = this;
@@ -34,25 +29,6 @@ public class TileDrop : MonoBehaviour {
 		}
 	}
 
-	public void setupEnviroment (Vector2 mapSize) {
-		xAxis = new int[(int)mapSize.y];
-		yAxis = new int[(int)mapSize.x];
-		xSize = (int)mapSize.x - 1;
-		ySize = (int)mapSize.y - 1;
-		objectsList = new GameObject[(int) mapSize.y, (int) mapSize.x];
-
-		GameObject parent = GameObject.Find ("Walls");
-		GameObject leftDoor = new GameObject();
-		leftDoor.name = "leftDoorHolder";
-		leftDoor.transform.parent = parent.transform;
-		GameObject rightDoor = new GameObject();
-		rightDoor.name = "rightDoorHolder";
-		rightDoor.transform.parent = parent.transform;
-
-		objectsList[(int)Walls.S.leftDoor.x,(int)Walls.S.leftDoor.z] = leftDoor;
-		objectsList[(int)Walls.S.rightDoor.x,(int)Walls.S.rightDoor.z] = rightDoor;
-	}
-
 	public bool getPosition (out RaycastHit hitInfo) {
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		Physics.Raycast(ray, out hitInfo);
@@ -62,9 +38,7 @@ public class TileDrop : MonoBehaviour {
 
 	public bool checkPosition (Vector3 position) {
 		Vector2 startPos = new Vector2 (-.5f, -.5f);
-		Vector2 endPos = Map.S.mapSize;
-		endPos.x -= .5f;
-		endPos.y -= .5f;
+		Vector2 endPos = new Vector2 (8.5f, 15.5f);
 
 		if (
 			position.x >= startPos.y && 
@@ -92,33 +66,18 @@ public class TileDrop : MonoBehaviour {
 		}
 	}
 
-	public void setPosition (Vector3 position, GameObject item) {
-		int x = Mathf.RoundToInt (position.x);
-		int y = Mathf.RoundToInt (position.z);
-		objectsList [x, y] = item;
+	public bool checkForObject (RaycastHit hit) {
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		RaycastHit[] hits = Physics.RaycastAll(ray);
 
-		xAxis [x] += 1;
-		yAxis [y] += 1;
-	}
-
-	public bool checkForObject (Vector3 position) {
-		if (objectsList [Mathf.RoundToInt (position.x), Mathf.RoundToInt (position.z)]) {
-			return true;
-		} else {
-			return false;
+		int i = 0;
+		while (i < hits.Length) {
+			if (hits[i].collider.tag == "Path" || hits[i].collider.tag == "Tower") {
+				return true;
+			}
+			i++;
 		}
-	}
 
-	public bool willBlockPath (Vector3 position) {
-		if (xAxis [Mathf.RoundToInt (position.x)] == xSize || yAxis [Mathf.RoundToInt (position.z)] == ySize) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public bool willBlockDoor (Vector3 position) {
-		//TODO: Impliment this
 		return false;
 	}
 

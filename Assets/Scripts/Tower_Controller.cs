@@ -47,7 +47,6 @@ public class Tower_Controller : MonoBehaviour {
 
 				GameObject newTower = Instantiate (towerPrefabs [0].towerPrefab, towerPos, Quaternion.identity) as GameObject;
 				newTower.transform.parent = transform;
-				TileDrop.S.setPosition(towerPos,newTower);
 			} else {
 				Destroy (ghostTower);
 			}
@@ -57,9 +56,7 @@ public class Tower_Controller : MonoBehaviour {
 	public bool checkForPlacement (RaycastHit hit) {
 		if (
 			TileDrop.S.checkPosition(hit.point) && 
-			!TileDrop.S.checkForObject(hit.point) && 
-			!TileDrop.S.willBlockPath(hit.point) &&
-			!TileDrop.S.willBlockDoor(hit.point)
+			!TileDrop.S.checkForObject(hit)
 		) {
 			return true;
 		} else {
@@ -80,7 +77,7 @@ public class Tower_Controller : MonoBehaviour {
 		ghostTower = Instantiate (towerPrefabs [0].towerPrefab, towerPos, Quaternion.identity) as GameObject;
 		ghostTower.name = "ghostTower";
 		ghostTower.transform.parent = transform;
-		ghostTower.tag = "Untagged";
+		ghostTower.tag = "Ghost";
 
 		Tower script = ghostTower.GetComponent<Tower> ();
 		script.makeTransparent ();
